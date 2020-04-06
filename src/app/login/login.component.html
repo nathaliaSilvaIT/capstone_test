@@ -1,0 +1,197 @@
+<body class="sign-in">
+
+
+	<div class="wrapper">
+
+		<div class="sign-in-page">
+			<div class="signin-popup">
+				<div class="signin-pop">
+					<div class="row">
+						<div class="col-lg-6">
+							<div class="cmp-info">
+								<div class="cm-logo">
+									<img src="../../assets/images/logo/logo.png" alt="logo" >
+									<!-- <p>Academy</p> -->
+								</div><!--cm-logo end-->
+								<!-- <img src="../../assets/images/cm-main-img.png" alt=""> -->
+							</div><!--cmp-info end-->
+						</div>
+						<div class="col-lg-6">
+							<div class="login-sec">
+								<ul class="sign-control">
+									<li data-tab="tab-1" (click)="OpenPost(true)" [className]="postOpen ? 'current' : ''">
+										<button>
+										<a title="">Sign in &nbsp;</a>
+									</button>
+								</li>
+									<li data-tab="tab-2" (click)="OpenPost(false)" [className]="postOpen ? '' : 'current'">
+										<button>
+											<a title="">Sign up</a>
+										</button>
+									</li>
+								</ul>
+								<div [className]="postOpen ? 'sign_in_sec current' : 'sign_in_sec'" id="tab-1">
+                  <h3>Sign in</h3>
+                  <form (ngSubmit)="onSubmit(username, passw)" #loginForm="ngForm" >
+										<div class="row">
+                      <div *ngIf="errorMessage === true" class="error">
+                        <div>
+                          <p style="color: red;">username or password is incorrect.</p>
+                          <br>
+                        </div>
+                      </div>
+											<div class="col-lg-12 no-pdd">
+												<div class="sn-field">
+													<!-- <input type="text" id="username" name="username" placeholder="mail@georgebrown.ca" required minlength="16"
+                          required [ngModel]="username" #username="ngModel"> -->
+                          <input type="text" class="form-control" id="userName" name="userName" ngModel #username="ngModel"  placeholder="mail@georgebrown.ca">
+													<i class="la la-user"></i>
+												</div><!--sn-field end-->
+
+
+												<!-- <div *ngIf="!username?.valid && (username?.dirty || username?.touched)" class="error">
+													<div *ngIf="username.errors.minlength">
+														<p style="color: red;">username not found
+														</p>
+														<br>
+													</div>
+												</div> -->
+											</div>
+
+											<div class="col-lg-12 no-pdd">
+												<div class="sn-field">
+													<!-- <input type="password" id="password" name="password" placeholder="password" required minlength="8"
+													required [ngModel]="password" #password="ngModel"	> -->
+
+                          <input class="form-control" id="password" name="password" ngModel #passw="ngModel" placeholder="password" type="password">
+													<i class="la la-user"></i>
+												</div><!--sn-field end-->
+
+
+												<!-- <div *ngIf="!password2?.valid " class="error">
+													<div *ngIf="password2.errors.minlength">
+														<p style="color: red;">invalid password
+														</p>
+														<br>
+													</div>
+												</div> -->
+											</div>
+
+
+											<div class="col-lg-12 no-pdd">
+                        <button class="btn btn-lg btn-primary btn-block" type="submit" >Sign in</button>
+											</div>
+										</div>
+									</form>
+								</div><!--sign_in_sec end-->
+								<div [className]="postOpen ? 'sign_in_sec' : 'sign_in_sec current'" id="tab-2">
+									<div class="dff-tab current" id="tab-3">
+										<h3>Sign up</h3>
+										<form (ngSubmit)="registerUser(userName, lastName, nickName, email, password)" #addForm="ngForm">
+											<div class="row">
+												<div class="col-lg-12 no-pdd">
+													<div class="sn-field">
+                            <p *ngIf="userName.errors?.required" style="color: red;">* required field</p>
+                            <p *ngIf="userName.errors?.minlength" style="color: red;">Username must be at least 2 characters long.</p>
+														<input type="text"
+														name="userName"
+														placeholder="First Name"
+														required minlength="2"
+														pattern="^[a-zA-Z]+$"
+														(keydown.space)="$event.preventDefault();"
+														ngModel #userName="ngModel">
+														<i class="la la-user"></i>
+													</div>
+												</div>
+												<div class="col-lg-12 no-pdd">
+													<div class="sn-field">
+                            <p *ngIf="lastName.errors?.required" style="color: red;">* required field</p>
+                            <p *ngIf="lastName.errors?.minlength" style="color: red;">Last name must be at least 2 characters long.</p>
+														<input
+														type="text"
+														name="lastName"
+														placeholder="Last Name"
+														required minlength="2"
+														pattern="^[a-zA-Z]+$"
+														(keydown.space)="$event.preventDefault();"
+														ngModel #lastName="ngModel">
+														<i class="la la-user"></i>
+													</div>
+												</div>
+												<div class="col-lg-12 no-pdd">
+													<div class="sn-field">
+                            <p *ngIf="nickName.errors?.required" style="color: red;">* required field</p>
+                            <p *ngIf="nickName.errors?.minlength" style="color: red;">Nickname must be at least 2 characters long.</p>
+														<input type="text" name="nickName" placeholder="NickName"
+														required minlength="2"
+														ngModel #nickName="ngModel">
+														<i class="la la-user"></i>
+													</div>
+												</div>
+												<div class="col-lg-12 no-pdd">
+													<div class="sn-field">
+                            <p *ngIf="email.errors?.required" style="color: red;">* required field</p>
+                            <p *ngIf="email.errors?.pattern" style="color: red;">Email must be a georgebrown.ca domain.</p>
+                            <p *ngIf="email.errors?.minlength" style="color: red;">Email must be at least 16 characters long.</p>
+														<input type="email" name="email"
+														placeholder="mail@georgebrown.ca"
+														required minlength="16"
+														(keydown.space)="$event.preventDefault();"
+														pattern="^[a-z0-9](\.?[a-z0-9]){2,}@g(bc)?eorgebrown\.ca$"
+														ngModel #email="ngModel">
+														<i class="la la-envelope"></i>
+													</div>
+												</div>
+												<div class="col-lg-12 no-pdd">
+													<div class="sn-field">
+                            <p *ngIf="password.errors?.required" style="color: red;">* required field</p>
+                            <p *ngIf="password.errors?.minlength" style="color: red;">Password must be at least 8 characters long.</p>
+														<input type="password" name="password"
+														 placeholder="Password"
+														 required minlength="8"
+														ngModel #password="ngModel">
+														<i class="la la-lock"></i>
+                          </div>
+                        </div>
+												<div class="col-lg-12 no-pdd">
+													<div class="checky-sec st2">
+														<div class="fgt-sec">
+                              <p *ngIf="cc.errors?.required" style="color: red;">* required field</p>
+															<input
+															type="checkbox"
+															name="cc" id="c2"
+															ngModel #cc="ngModel"
+															required>
+															<label for="c2">
+																<span></span>
+															</label>
+															<small>Yes, I understand and agree to Academy's Terms & Conditions.</small>
+														</div><!--fgt-sec end-->
+													</div>
+												</div>
+
+												<div class="col-lg-12 no-pdd">
+													<button type="submit" [disabled]="!addForm.valid">Get Started</button>
+												</div>
+											</div>
+										</form>
+									</div><!--dff-tab end-->
+								</div>
+							</div><!--login-sec end-->
+						</div>
+					</div>
+				</div><!--signin-pop end-->
+			</div><!--signin-popup end-->
+			<div class="footy-sec">
+				<div class="container">
+					<ul>
+					</ul>
+					<p><img src="../../assets/images/copy-icon.png" alt="">Capstone Group T33 - Copyright 2020</p>
+				</div>
+			</div><!--footy-sec end-->
+		</div><!--sign-in-page end-->
+
+
+	</div><!--theme-layout end-->
+
+</body>

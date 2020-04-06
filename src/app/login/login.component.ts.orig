@@ -1,0 +1,146 @@
+import { Component, ViewChild, ElementRef, OnInit } from '@angular/core';
+import { UserService } from '../services/user.service';
+import { Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
+import {SessionStorageService} from 'angular-web-storage';
+import { InterestService } from '../services/interest.service';
+import { NgForm } from '@angular/forms';
+
+@Component({
+  selector: 'app-login',
+  templateUrl: './login.component.html',
+  styleUrls: ['./login.component.css']
+})
+
+
+export class LoginComponent implements OnInit {
+
+  userData: any;
+  message: any;
+  userId: any;
+  allInterest: any;
+  interestsModified: any = [];
+  interestsObject: object;
+  constructor(private router: Router,
+              private session: SessionStorageService,
+              private userService: UserService,
+              private interestService: InterestService
+              ) {  }
+
+
+
+  @ViewChild('contactForm',null) contactForm: NgForm;
+
+
+  contact:contact;
+
+  ngOnInit( ) {
+
+     this.contact = {
+      username:"",
+      password2:"",
+    };
+
+
+   }
+
+  onSubmit() {
+
+
+    // this.session.set('username', username.value, 0);
+    // this.session.set('password', password.value, 0);
+    this.getterUserByID();
+    this.router.navigate(['/home']);
+
+
+  }
+
+  registerUser(firstname, lastname, nickname, email, password) {
+    this.interestService.getAllInterests().subscribe(gets => {
+      this.allInterest = gets;
+      let count = 0;
+      this.allInterest.interests.forEach(element => {
+        this.interestsModified[count] = {
+        interest_id : element._id,
+        interest_name : element.name,
+        interest_status : false
+      };
+        count++;
+     });
+
+      this.userData = {
+            organization_id : '5e210bc35db23341c0d87f6e',
+            interest: this.interestsModified,
+            event: [],
+            role: 'Student',
+            email: email.value,
+            password: password.value,
+            firstname: firstname.value,
+            lastname: lastname.value,
+            nickname: nickname.value,
+            picture: '../../assets/images/logo/bear-animal-cartoon.png',
+      };
+
+      this.userService.addUser(this.userData).subscribe(data => {
+                        this.userData = {
+                          _id : data.createdUser._id,
+                          organization_id : data.createdUser.organization_id,
+                          interest: data.createdUser.interest,
+                          event: [],
+                          role: data.createdUser.role,
+                          email: data.createdUser.email,
+                          password: data.createdUser.password,
+                          firstname: data.createdUser.firstname,
+                          lastname: data.createdUser.lastname,
+                          nickname: data.createdUser.nickname,
+                          picture: data.createdUser.picture,
+                        };
+
+                        this.session.set('user', this.userData, 0);
+                        this.session.set('Interest', data.createdUser.interest, 0);
+                        this.session.set('Event', [], 0);
+                        window.alert('user added!');
+                        this.router.navigate(['home']);
+                    });
+    });
+
+
+
+
+
+   }
+
+  getterUserByID() {
+    this.userService.getUserById().subscribe(gets => {
+    this.userId = gets;
+
+    this.session.set('interest', this.userId.user.interest, 0);
+    this.session.set('event', this.userId.user.event, 0);
+    this.session.set('user', this.userId, 0);
+
+  });
+
+
+}
+
+SignIn() {
+  this.userService.getUserById().subscribe(gets => {
+  this.userId = gets;
+
+  this.session.set('interest', this.userId.user.interest, 0);
+  this.session.set('event', this.userId.user.event, 0);
+  this.session.set('user', this.userId, 0);
+  this.router.navigate(['home']);
+  });
+}
+
+}
+
+
+export class contact {
+  username:string;
+  password2:string;
+
+}
+
+

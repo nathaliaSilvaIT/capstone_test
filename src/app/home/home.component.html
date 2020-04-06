@@ -1,0 +1,223 @@
+<div [className]="postOpen ? 'wrapper overlay' : 'wrapper'">
+	<app-header></app-header>
+	<main>
+		<div class="main-section">
+			<div class="container">
+				<div class="main-section-data">
+					<div class="row">
+						<div class="col-lg-3 col-md-4 pd-left-none no-pd">
+							<div class="main-left-sidebar no-margin">
+								<div class="user-data full-width">
+									<div class="user-profile">
+										<div class="username-dt">
+											<div class="usr-pic">
+												<img src="{{users.picture}}" alt="">
+											</div>
+										</div>
+										<!--username-dt end-->
+										<div class="user-specs">
+											<h3>{{users.firstname}} {{users.lastname}}</h3>
+										</div>
+									</div>
+									<!--user-profile end-->
+									<ul class="user-fw-status">
+										<li>
+											<h4>{{users.nickname}}</h4>
+										</li>
+										<li>
+											<a routerLink="/myprofile" routerLinkActive="active">View Profile</a>
+										</li>
+									</ul>
+								</div>
+
+							</div>
+							<!--main-left-sidebar end-->
+						</div>
+						<div class="col-lg-6 col-md-8 no-pd">
+							<div class="main-ws-sec">
+								<div class="post-topbar">
+									<div class="user-picy">
+										<img src="{{users.picture}}" alt="">
+									</div>
+									<div class="post-st">
+										<ul>
+											<li>
+												<button>
+												<a (click)="OpenPost(undefined)" class="post-jb active" title="">
+													Create Post
+												</a>
+												</button>
+											</li>
+										</ul>
+									</div>
+									<!--post-st end-->
+								</div>
+								<!--post-topbar end-->
+
+								<div class="posts-section" *ngFor="let pst of posts?.posts">
+									<div class="posty" *ngIf="pst.beVisible === true">
+										<div class="post-bar">
+											<div class="post_topbar">
+												<div class="usy-dt">
+													<div class="usy-name">
+														<h3 *ngIf="pst.is_anonymous === false">{{pst.user_id.firstname}}
+															{{pst.user_id.lastname}}</h3>
+														<h3 *ngIf="pst.is_anonymous === true">Anonymous</h3>
+														<span><i class="far fa-clock"> </i>
+															{{pst.created_at | date : 'short'}} </span>
+													</div>
+												</div>
+												<div class="ed-opts"
+													*ngIf="users.role === 'Admin' || pst.user_id._id === users._id">
+													<a (click)="OpenOption(pst._id)"
+														[className]='"ed-opts-open-" +  pst._id'><i
+															class="la la-ellipsis-v"></i></a>
+													<ul
+														class="{{OpenOptions[pst._id] == 'active' ? 'ed-options ' +  pst._id + ' active' : 'ed-options ' +  pst._id + ' inactive'}}">
+														<li><a href="/home" (click)="btnDelete(pst._id)" title="">Delete
+																Post</a></li>
+													</ul>
+												</div>
+											</div>
+											<div class="job_descp">
+												<p>{{pst.content}}</p>
+												<ul class="skill-tags">
+													<li><a title="">{{pst.interest_id.name}}</a></li>
+												</ul>
+											</div>
+											<div class="job-status-bar" (click)="OpenComment(pst._id)">
+												<ul class="like-com">
+													<!-- <li><a  (click)="hideComments()" class="com"><i class="fas fa-comment-alt"></i> Comment </a></li> -->
+													<li><a class="com"><i class="fas fa-comment-alt"></i> Comment </a>
+													</li>
+												</ul>
+
+												<!-- <div class="{{OpenComments[pst._id] == 'true' ? 'hidden' : ''}}"> -->
+												<!-- <div [hidden]="OpenComments[pst._id]" class="comment-section"> -->
+												<div class="comment-section"
+													*ngIf="OpenComments[pst._id] === 'true' ? 'hidden' : '' ">
+													<div class="comment-sec">
+														<ul>
+															<li *ngFor="let cmt of pst.comment">
+																<div class="comment-list">
+																	<div class="comment">
+																		<h3>{{cmt.comment_id.user_id.firstname}}
+																			{{cmt.comment_id.user_id.lastname}}</h3>
+																		<span><i class="far fa-clock"> </i>
+																			{{cmt.comment_id.created_at | date : 'short'}}</span>
+																		<p>{{cmt.comment_id.content}}</p>
+																	</div>
+																</div>
+																<!--comment-list end-->
+															</li>
+														</ul>
+													</div>
+													<!--comment-sec end-->
+												</div>
+											</div>
+											<!--post-bar end-->
+
+											<div class="post-comment">
+												<div class="comment_box">
+													<form #commentForm="ngForm"
+														(ngSubmit)="onSubmitComment(pst._id, commentContent)">
+														<input
+														name="commentContent"
+														type="text"
+														placeholder="Post a comment"
+														required minlength="2"
+														required pattern=".*\S.*"
+														ngModel #commentContent="ngModel"
+														>
+
+														<button type="submit" [disabled]="!commentForm.valid">Send</button>
+
+													</form>
+												</div>
+											</div>
+											<!--post-comment end-->
+										</div>
+										<!--comment-section end-->
+									</div>
+									<!--posty end-->
+								</div>
+								<!--posts-section end-->
+
+
+
+							</div>
+							<!--main-ws-sec end-->
+						</div>
+						<div class="col-lg-3 pd-right-none no-pd">
+							<div class="right-sidebar">
+								<div class="widget widget-about">
+									<img src="../../assets/images/logo/logo.png" alt="Academy's logo">
+								</div>
+								<!--widget-about end-->
+							</div>
+							<!--right-sidebar end-->
+						</div>
+					</div>
+				</div><!-- main-section-data end-->
+			</div>
+		</div>
+	</main>
+
+
+
+
+
+	<div [className]="postOpen ? ' post-popup job_post active' : ' post-popup job_post inactive'">
+		<div class="post-project">
+			<h3>Post</h3>
+			<div class="post-project-fields">
+				<form #postForm="ngForm" (ngSubmit)="onSubmitPost(interest, content)">
+					<div class="row">
+						<div class="col-lg-12">
+              <p *ngIf="interest.errors?.required" style="color: red;">* required field</p>
+							<select name="interests" required ngModel #interest="ngModel">
+								<option *ngFor="let ints of interests" value='{{ints.interest_id}}'>
+									<p *ngIf="ints.interest_status === true">{{ints.interest_name}}</p>
+								</option>
+							</select>
+						</div>
+						<div class="col-lg-12">
+              <p *ngIf="content.errors?.required" style="color: red;">* required field</p>
+              <p *ngIf="content.errors?.minlength" style="color: red;">content must be at least 18 characters long.</p>
+							<textarea
+							name="content"
+							placeholder="content"
+							required pattern=".*\S.*"
+							required minlength="18"
+							ngModel #content="ngModel"
+							></textarea>
+            </div>
+						<div class="col-lg-12">
+              <div class="custom-control custom-checkbox">
+							<input type="checkbox" value=false class="custom-control-input"
+								(change)="onChange($event.target.checked)" id="isAnonymous" required>
+							<label class="custom-control-label" for="isAnonymous">anonymous</label>
+              </div>
+            </div>
+						<div class="col-lg-12">
+							<ul>
+								<li><button class="active" type="submit" value="post" [disabled]="!postForm.valid">Post</button></li>
+								<li><a (click)="OpenPost(false)" title="">Cancel</a></li>
+							</ul>
+						</div>
+					</div>
+				</form>
+			</div>
+			<!--post-project-fields end-->
+			<a (click)="OpenPost(false)" title=""><i style="color:white;" class="la la-times-circle-o"></i></a>
+		</div>
+		<!--post-project end-->
+	</div>
+	<!--post-project-popup end-->
+
+
+
+
+
+</div>
+<!--theme-layout end-->

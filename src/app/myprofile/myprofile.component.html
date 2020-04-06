@@ -1,0 +1,119 @@
+
+ <div [className]="overviewOpen ? 'wrapper overlay' : 'wrapper'">
+	<app-header></app-header>
+
+		<section class="cover-sec">
+			<img src="../../assets/images/logo/cover.jpg" alt="">
+		</section>
+
+		<main>
+			<div class="main-section">
+				<div class="container">
+					<div class="main-section-data">
+						<div class="row">
+							<div class="col-lg-3 col-md-4 pd-left-none no-pd">
+								<div class="main-left-sidebar no-margin">
+									<div class="user-data full-width">
+										<div class="user-profile">
+											<div class="username-dt">
+												<div class="usr-pic">
+													<img src="{{imageSrc}}"  alt="">
+													<div class="add-dp" id="OpenImgUpload">
+                            <label for="file"><i (click)="onClickImage()" class="fas fa-angle-right"></i></label>
+                            <label for="file"><i (click)="onClickSaveImage()" class="far fa-save"></i></label>
+													</div>
+                        </div>
+											</div><!--username-dt end-->
+											<div class="user-specs">
+                      <br/>
+												<h3>{{users.firstname}}</h3>
+											</div>
+										</div><!--user-profile end-->
+										<ul class="user-fw-status">
+											<li>
+												<h4>{{users.nickname}}</h4>
+											</li>
+										</ul>
+									</div><!--user-data end-->
+									
+								</div><!--main-left-sidebar end-->
+							</div>
+							<div class="col-lg-6">
+								<div class="main-ws-sec">
+									<div class="user-tab-sec rewivew">
+										<h3>{{users.firstname}} {{users.lastname}}</h3>
+										<div class="star-descp">
+											<span>{{users.role}}</span>
+										</div><!--star-descp end-->
+
+									</div><!--user-tab-sec end-->
+											<div class="product-feed-tab current animated fade-in" id="info-dd">
+												<div class="user-profile-ov">
+													<h3><a  class="overview-open">Overview</a> <a (click)="OverviewOpen(undefined)" class="overview-open"><i class="fas fa-pencil-alt"></i></a></h3>
+													<div class="row">
+														<div class="col-lg-12 no-pdd">
+															<div class="sn-field">
+																<p>First Name: {{users.firstname}}</p>
+																<p>Last Name: {{users.lastname}}</p>
+																<p>Nickname: {{users.nickname}}</p>
+																<p>Email: {{users.email}}</p>
+															</div>
+														</div>
+													</div>
+												</div><!--user-profile-ov end-->
+												<div class="user-profile-ov" >
+                          <h3><a title="" class="skills-open">Interest</a>
+                              <a href="/interest" title="" class="skills-open"><i class="fas fa-pencil-alt"></i></a>
+                          </h3>
+													<ul *ngFor="let ints of interests">
+                          <li *ngIf="ints.interest_status === true"><a title="">{{ints.interest_name}}</a></li>
+												</ul>
+                        </div><!--user-profile-ov end-->
+                        <div class="user-profile-ov" >
+                          <h3><a title="" class="skills-open">Subscribed Events</a>
+                              <a href="/event" title="" class="skills-open"><i class="fas fa-pencil-alt"></i></a>
+                          </h3>
+													<ul *ngFor="let evt of event">
+                            <li *ngIf="evt.event_status === true"><a title="">{{evt.event_name}}</a></li>
+												</ul>
+												</div><!--user-profile-ov end-->
+											</div><!--product-feed-tab end-->
+								</div><!--main-ws-sec end-->
+							</div>
+							<div class="col-lg-3 pd-right-none no-pd">
+								<div class="right-sidebar">
+									<div class="widget widget-about">
+										<img src="../../assets/images/logo/logo.png" alt="academy_logo">
+										<h3></h3>
+									</div><!--widget-about end-->
+								</div><!--right-sidebar end-->
+							</div>
+						</div>
+					</div><!-- main-section-data end-->
+				</div>
+			</div>
+		</main>
+
+		<app-footer></app-footer><!--footer end-->
+
+		<div [className]="overviewOpen ? 'overview-box open' : 'overview-box'">
+			<div class="overview-edit">
+				<h3>Personal Information</h3>
+				<form (ngSubmit)="onSubmit(nickname)" #addForm="ngForm">
+					<div class="row">
+						<div class="col-lg-12 no-pdd">
+							<div class="sn-field">
+                <div *ngIf="errorMessage === true" class="error">
+                <p style="color: red;">nickname cannot be empty</p>
+                </div>
+                <input type="text" name="nickname" required ngModel #nickname="ngModel" placeholder="nickname">
+							</div>
+						</div>
+					</div>
+					<button type="submit" class="save">Save</button>
+					<button (click)="OverviewOpen(false)" type="submit" class="cancel">Cancel</button>
+				</form>
+				<a (click)="OverviewOpen(false)" class="close-box"><i  style="color:white;" class="la la-close"></i></a>
+			</div><!--overview-edit end-->
+		</div><!--overview-box end-->
+	</div><!--theme-layout end-->

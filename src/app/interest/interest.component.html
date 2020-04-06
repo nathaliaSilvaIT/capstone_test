@@ -1,0 +1,40 @@
+	<div class="wrapper">
+		<app-header>
+		</app-header>
+
+
+		<section class="companies-info">
+			<div class="container">
+				<div class="company-title">
+					<h3>All Interest</h3>
+				</div><!--company-title end-->
+				<div class="companies-list">
+					<div class="row">
+						<div class="col-lg-3 col-md-4 col-sm-6" *ngFor="let ints of interests">
+							<div class="company_profile_info" >
+								<div class="company-up-info">
+                  <h3>{{ints.interest_name}}</h3>
+									<h4></h4>
+									<ul>
+										
+						<li *ngIf="ints.interest_status === true">
+							<button><a  (click)="updateStatus(ints._id, ints.interest_id,  ints.interest_name, false)" title="following" class="following">Following
+
+							</a></button></li>
+                    	<li *ngIf="ints.interest_status === false">
+							<button>
+							<a  (click)="updateStatus(ints._id, ints.interest_id,  ints.interest_name, true) "title="follow" class="follow">Follow
+								
+							</a></button></li>
+									</ul>
+								</div>
+							</div><!--company_profile_info end-->
+						</div>
+					</div>
+				</div><!--companies-list end-->
+			</div>
+		</section><!--companies-info end-->
+		<app-footer></app-footer>
+
+	</div><!--theme-layout end-->
+

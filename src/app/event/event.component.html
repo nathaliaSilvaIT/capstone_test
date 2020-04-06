@@ -1,0 +1,199 @@
+<div [className]="postOpen ? 'wrapper overlay' : 'wrapper'">
+  <app-header></app-header>
+  <main>
+    <div class="main-section">
+      <div class="container">
+        <div class="main-section-data">
+          <div class="row">
+            <div class="col-lg-3 col-md-4 pd-left-none no-pd">
+              <div class="main-left-sidebar no-margin">
+                <div class="user-data full-width">
+                  <div class="user-profile">
+                    <div class="username-dt">
+                      <div class="usr-pic">
+                        <img src="{{users.picture}}"  alt="">
+                      </div>
+                    </div><!--username-dt end-->
+                    <div class="user-specs">
+                      <h3>{{users.firstname}} {{users.lastname}}</h3>
+                    </div>
+                  </div><!--user-profile end-->
+                  <ul class="user-fw-status">
+                    <li>
+                      <h4>{{users.nickname}}</h4>
+                    </li>
+                    <li>
+                      <a [routerLink]="['/myprofile']" routerLinkActive="active">
+                        View Profile
+                    </a>
+                    </li>
+                  </ul>
+                </div><!--user-data end-->
+
+              </div><!--main-left-sidebar end-->
+            </div>
+            <div class="col-lg-6 col-md-8 no-pd">
+              <div class="main-ws-sec">
+                <div class="post-topbar">
+                  <div class="user-picy">
+                    <img src="{{users.picture}}"  alt="">
+                  </div>
+                  <div class="post-st">
+                    <ul>
+                      <li><a (click)="OpenPost(undefined)" class="post-jb active" title="">Create Event</a></li>
+                    </ul>
+                  </div><!--post-st end-->
+                </div><!--post-topbar end-->
+                <div class="posts-section" *ngFor="let evt of events?.events" >
+                  <div class="posty" *ngIf="evt.beVisible === true" >
+                    <div class="post-bar" >
+                      <div class="post_topbar">
+                        <div class="usy-dt">
+                          <div class="usy-name">
+                            <h3><b>{{evt.title}}</b></h3>
+                          </div>
+                        </div>
+                        <div class="ed-opts"
+													*ngIf="users.role === 'Admin' || evt.user_id._id === users._id">
+													<a (click)="OpenOption(evt._id)"
+														[className]='"ed-opts-open-" +  evt._id'><i
+															class="la la-ellipsis-v"></i></a>
+													<ul
+														class="{{OpenOptions[evt._id] == 'active' ? 'ed-options ' +  evt._id + ' active' : 'ed-options ' +  evt._id + ' inactive'}}">
+														<li><a href="/event" (click)="btnDelete(evt._id)" title="">Delete
+																Post</a></li>
+													</ul>
+												</div>
+                      </div>
+                      <div class="job_descp">
+                        <br>
+                        <p><i class="far fa-calendar-alt"> </i>  Date : {{evt.date_time | date : 'fullDate'}}</p>
+                        <p><i class="far fa-calendar-alt"> </i>  Time : {{evt.date_time | date : 'shortTime'}}</p>
+                        <p><i class="fas fa-map-marked-alt"> </i>  Location: {{evt.location}}</p>
+                        <p><i class="fas fa-user"> </i>  Created by: {{evt.user_id.firstname}} {{evt.user_id.lastname}}</p>
+                        <p><i class="fas fa-info-circle"> </i>  Description: {{evt.content}} </p>
+                        <br>
+                        <ul class="skill-tags">
+                          <li><a title="">{{evt.interest_id.name}}</a></li>
+                        </ul>
+                      </div>
+                      <div>
+                    </div><!--post-bar end-->
+                          <div class="comment_box">
+                          <form *ngIf="(evt.user_id._id !== users._id && evt.userSubscribed !== true)" #SubscribeEventForm = "ngForm" (ngSubmit) = "onSubscribeEvent(evt._id, evt.title, true)">
+                            <button type="submit" >Subscribe now</button>
+                          </form>
+                        </div>
+
+                    </div><!--comment-section end-->
+                  </div><!--posty end-->
+                </div><!--posts-section end-->
+
+
+
+              </div><!--main-ws-sec end-->
+            </div>
+            <div class="col-lg-3 pd-right-none no-pd">
+              <div class="right-sidebar">
+                <div class="widget widget-about">
+                  <img src="../../assets/images/logo/logo.png" alt="">
+                </div><!--widget-about end-->
+              </div><!--right-sidebar end-->
+            </div>
+          </div>
+        </div><!-- main-section-data end-->
+      </div>
+    </div>
+  </main>
+
+
+
+
+
+  <div [className]="postOpen ? ' post-popup job_post active' : ' post-popup job_post inactive'">
+    <div class="post-project">
+      <h3>Post event</h3>
+      <div class="post-project-fields">
+        <form (ngSubmit)="onSubmitEvent(interest, title, location, content, date, time)" #postForm="ngForm">
+          <div class="row">
+            <div class="col-lg-12" >
+              <p *ngIf="interest.errors?.required" style="color: red;">* required field</p>
+              <select name="interests" placeholder='interest' required ngModel #interest="ngModel">
+                <option *ngFor="let ints of interests" value='{{ints.interest_id}}' >
+                  <p *ngIf="ints.interest_status === true">{{ints.interest_name}}</p></option>
+            </select>
+            </div>
+            <div class="col-lg-12">
+              <p *ngIf="title.errors?.minlength" style="color: red;">title must be at least 5 characters long.</p>
+              <p *ngIf="title.errors?.required" style="color: red;">* required field</p>
+              <input
+              name="title"
+              placeholder="title"
+              required minlength="5"
+              ngModel #title="ngModel"
+              >
+            </div>
+            <div class="col-lg-12">
+              <p *ngIf="location.errors?.minlength" style="color: red;">location must be at least 3 characters long.</p>
+              <p *ngIf="location.errors?.required" style="color: red;">* required field</p>
+              <input
+              name="location"
+              placeholder="location"
+              required minlength="3"
+              ngModel #location="ngModel"
+              >
+            </div>
+            <div class="col-lg-12">
+              <p *ngIf="content.errors?.minlength" style="color: red;">content must be at least 16 characters long.</p>
+              <p *ngIf="content.errors?.required" style="color: red;">* required field</p>
+              <textarea
+              name="content"
+              placeholder="content"
+              required minlength="16"
+              ngModel #content="ngModel"
+              ></textarea>
+            </div>
+            <div class="col-lg-6">
+              <p *ngIf="errorDate === true" style="color: red;">date must be greater than today</p>
+              <p *ngIf="date.errors?.required" style="color: red;">* required field</p>
+              <div class="price-br">
+                <input
+                type="date"
+                name="date"
+                placeholder="date"
+                required
+                ngModel #date="ngModel"
+                >
+              </div>
+            </div>
+            <div class="col-lg-6">
+              <p *ngIf="time.errors?.required" style="color: red;">* required field</p>
+              <div class="price-br">
+                <input
+                type="time"
+                name="time"
+                placeholder="time"
+                required
+                ngModel #time="ngModel"
+                >
+              </div>
+            </div>
+            <div class="col-lg-12">
+                <ul>
+                <li><button class="active" type="submit" [disabled]="!postForm.valid">Post</button></li>
+                <li><a (click)="OpenPost(false)" title="">Cancel</a></li>
+              </ul>
+            </div>
+          </div>
+        </form>
+      </div><!--post-project-fields end-->
+      <a (click)="OpenPost(false)" title=""><i style="color:white;" class="la la-times-circle-o"></i></a>
+    </div><!--post-project end-->
+  </div><!--post-project-popup end-->
+
+
+
+
+
+</div><!--theme-layout end-->
+
